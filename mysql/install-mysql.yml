@@ -1,0 +1,8 @@
+#
+#About: This will install MySql
+#
+---
+- hosts: localhost
+  become: yes
+  roles:
+  - mysql

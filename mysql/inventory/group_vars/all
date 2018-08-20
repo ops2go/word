@@ -1,0 +1,18 @@
+# AWS variables
+aws_access_key: "" 
+aws_secret_key: ""
+aws_region: us-east-1
+iam_group: admin
+iam_policy: admin
+iam_role: admin
+s3_bucket_name: test
+
+
+##MySql server variables
+mysql_backup: "/var/log/mysql_backup"
+mysqlrootpassword: "root"
+mysql_password: "password"
+mysql_user: "mysql"
+database_name: "word-service"
+mysql_back_email: ""
+hostname: "localhost"
