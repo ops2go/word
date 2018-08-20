@@ -90,6 +90,8 @@ mysql-create-user.yml
 
 ### Create S3 Bucket
 
+*Note: I decided to use the awscli since it was a pretty quick and simple task to create a bucket and create a policy. Ansible, Terraform, or Cloudformation could be used as an alternative for more complex tasks. I dockerized the awscli so that the user does not have to install all of aws's dependencies onto their machine.
+
 Build the docker image:
 ```
 docker build -t aws .
@@ -124,13 +126,12 @@ The json policy:
 ```
 Build the docker image:
 ```
-docker build -t awscli .
+docker build -t aws .
 ```
 Create the policy:
 ```
 docker run aws aws iam create-policy --policy-name s3-policy --policy-document file://s3-policy.json
 ```
-![](https://github.com/ops2go/word/blob/master/imgs/create-policy.png?raw=true)
 
 ## Considerations
 
@@ -172,7 +173,7 @@ To scale the services, I would use Kubeadm to bootstrap a Kubernetes environment
 
 Kubernetes is preferred since it has built in high availability, failover, namespacing, and more for containerized services. 
 
-The Ansible Playbooks provided could be used by an administrator to replicate and scale MYSQL and S3 bucket creation for each developers environment. A hosts file containing the ip addresses of all target hosts could be implemented to accomplish this.
+The Ansible Playbooks provided could be used by an administrator to replicate and scale MYSQL installations for each developers environment. A hosts file containing the ip addresses of all target hosts could be implemented to accomplish this.
 
 
 
@@ -203,25 +204,13 @@ Configuration Secrets can be passed into the container at buildtime with CICD bu
 
 
 
-*   The ansible repo should be in a separate repository from the container build repo
+*   The ansible and aws repo should be in a separate repository from the container build repo
 
 *   Building the CLI could be automated with a multistage Docker build
 
-
-*   The Cobra CLI could be developed to automate helpful tasks like backing up MYSQL to S3, or make http requests.
+*   The Cobra CLI could be developed to support functionality like http requests, or integrate with aws via their golang sdk.
 
 *   It would be a hassle to require all developers to download Ansible on their PC. A sysadmin should use the playbooks to configure all necessary dev environments using the hosts file in playbooks/inventory/hosts
-
-*   Ansible playbooks can be dockerized and deployed to a kubernetes cluster to configure dev PC's. I use dockerized ansible-playbooks along with the openfaas framework for making http requests to trigger the playbooks.
-
-example:
-
-add hosts to ansible repo
--> commit changes
--> build container image 
--> deploy to kubernetes
--> run playbooks 
-or schedule the playbooks as cron jobs
 
 *  S3fs can be used to mount an S3bucket locally
 
