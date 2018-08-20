@@ -90,53 +90,47 @@ mysql-create-user.yml
 
 ### Create S3 Bucket
 
-
-
+Build the docker image:
 ```
-ansible-playbook create-s3-bucket.yml
-```
-
-
-
-### Create S3 IAM Role
-
-```
-ansible-playbook create-iam-role.yml
+docker build -t aws .
 ```
 
+Create the bucket:
+```
+docker run aws aws s3 mb ibt-homework-bucket
 
 
 ### Create S3 IAM Policy
-playbooks/roles/create-iam-policy/templates
+
+The json policy:
 
 ```json
 {
     "Version": "2012-10-17",
     "Statement": [
-      {
-        "Effect": "Allow",
-        "Action": ["s3:ListBucket"],
-        "Resource": ["arn:aws:s3:::ibt-homework-bucket"]
-      },
-      {
-        "Effect": "Allow",
-        "Action": [
-          "s3:PutObject",
-          "s3:GetObject",
-          "s3:DeleteObject"
-        ],
-        "Resource": ["arn:aws:s3:::ibt-homework-bucket/*"]
-      }
+        {
+            "Effect": "Allow",
+            "Action": [
+                "s3:Get*",
+                "s3:Put*"
+            ],
+            "Resource": [
+                "arn:aws:s3:::ibt-homework-bucket/*"
+            ]
+        }
     ]
-  }
+}
 
 ```
-
+Build the docker image:
 ```
-ansible-playbook create-iam-policy.yml
+docker build -t awscli .
 ```
-
-
+Create the policy:
+```
+docker run aws aws iam create-policy --policy-name s3-policy --policy-document file://s3-policy.json
+```
+![](https://github.com/ops2go/word/blob/master/imgs/create-policy.png?raw=true)
 
 ## Considerations
 
